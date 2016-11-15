@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Change these entries to match your t8code library folder
+BASEDIR=$HOME/promotion/exec
+T8_DIR=$BASEDIR/t8_code_install/install
+
+
+# Compiler settings
+
+CC=mpicc
+CFLAGS='-Wall -pedantic --std=c99 -O0 -g'
+SOURCE='../src/test.c ../src/sfccc_piece.c'
+
+# There should be no need to change the following lines
+LIB=$T8_DIR/lib
+INCLUDE=$T8_DIR/include
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LIB
+
+# compile line
+echo libraries in $LIB
+echo header in $INCLUDE
+
+echo "$CC $CFLAGS -o test $SOURCE -I$INCLUDE -L$LIB -lt8 -lp4est -lsc"
+$CC $CFLAGS -o test $SOURCE -I$INCLUDE -L$LIB -lt8 -lp4est -lsc
