@@ -1,17 +1,28 @@
 #include <t8.h>
 #include <t8_default.h>
 #include "sfccc_piece.h"
+#include "sfccc_searchgraph.h"
 
 void
 test_sfccc ()
 {
   sfccc_piece_t      *piece;
+  int                 start, end;
 
-  piece = sfccc_piece_new (t8_scheme_new_default (), T8_ECLASS_TRIANGLE,
-                           0, 4, 1);
-  t8_debugf ("Created piece\n");
-  sfccc_piece_destroy (piece);
-  t8_debugf ("Destroyed piece\n");
+  for (end = 1; end < 16;end++) {
+    for (start = 0; start < end; start++) {
+      piece = sfccc_piece_new (t8_scheme_new_default (), T8_ECLASS_TRIANGLE,
+                               start, end, 2);
+      t8_debugf ("Created piece\n");
+      sfccc_piece_print (piece);
+      sfccc_compute_connected_components (piece);
+      t8_debugf ("Done\n");
+      sfccc_piece_print (piece);
+      sfccc_piece_destroy (piece);
+      t8_debugf ("Number of conn components:\t%i\n", piece->num_conn_components);
+      t8_debugf ("Destroyed piece\n");
+    }
+  }
 }
 
 int
