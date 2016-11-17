@@ -1,12 +1,12 @@
 #include "sfccc_piece.h"
 
 void
-sfccc_piece_element_fill_neighbor (sfccc_piece_t * piece, sfccc_element_t * elem,
-                                   int face)
+sfccc_piece_element_fill_neighbor (sfccc_piece_t * piece,
+                                   sfccc_element_t * elem, int face)
 {
-  sfccc_element_t     *neighbor;
-  int                  neigh_face;
-  t8_locidx_t          neighbor_index;
+  sfccc_element_t    *neighbor;
+  int                 neigh_face;
+  t8_locidx_t         neighbor_index;
 
   neighbor = sfccc_piece_new_element (piece);
   /* Compute the face neighbor across the given face */
@@ -27,7 +27,7 @@ sfccc_piece_element_fill_neighbor (sfccc_piece_t * piece, sfccc_element_t * elem
   if (neighbor_index >= 0) {
     neighbor = sfccc_piece_get_element (piece, neighbor_index);
     neighbor->face_neighbors[neigh_face] =
-        sfccc_element_is_in_piece (piece, elem);
+      sfccc_element_is_in_piece (piece, elem);
   }
 }
 
@@ -36,14 +36,14 @@ sfccc_piece_element_fill_neighbors (sfccc_piece_t * piece)
 {
   int                 iface;
   t8_locidx_t         li;
-  sfccc_element_t     *elem;
-  sfccc_element_t     *neighbor;
-  t8_locidx_t          neighbor_index;
+  sfccc_element_t    *elem;
+  sfccc_element_t    *neighbor;
+  t8_locidx_t         neighbor_index;
 
   T8_ASSERT (piece != NULL);
   neighbor = sfccc_piece_new_element (piece);
 
-  for (li = 0;li < sfccc_piece_num_elements (piece); li++) {
+  for (li = 0; li < sfccc_piece_num_elements (piece); li++) {
     elem = sfccc_piece_get_element (piece, li);
     for (iface = 0; iface < elem->num_neighbors; iface++) {
       /* Compute the face neighbor across the given face */
@@ -84,10 +84,10 @@ sfccc_piece_init_element (sfccc_piece_t * piece, sfccc_element_t * element,
   element->count_in_cc = 1;
 }
 
-sfccc_element_t *
+sfccc_element_t    *
 sfccc_piece_new_element (sfccc_piece_t * piece)
 {
-  sfccc_element_t * elem;
+  sfccc_element_t    *elem;
 
   T8_ASSERT (piece != NULL);
   elem = T8_ALLOC_ZERO (sfccc_element_t, 1);
@@ -98,7 +98,7 @@ sfccc_piece_new_element (sfccc_piece_t * piece)
 }
 
 void
-sfccc_piece_element_destroy (sfccc_piece_t * piece, sfccc_element_t *element)
+sfccc_piece_element_destroy (sfccc_piece_t * piece, sfccc_element_t * element)
 {
   T8_ASSERT (element != NULL);
 
@@ -154,6 +154,8 @@ sfccc_piece_new (t8_scheme_t * scheme, t8_eclass_t eclass, uint64_t first,
 
   T8_ASSERT (0 <= first && first < t8_eclass_count_leaf (eclass, level));
   T8_ASSERT (0 <= last && last < t8_eclass_count_leaf (eclass, level));
+  T8_ASSERT (0 <= level
+             && level < t8_element_maxlevel (scheme->eclass_schemes[eclass]));
   /* Allocate memory */
   piece = T8_ALLOC (sfccc_piece_t, 1);
 
@@ -174,8 +176,8 @@ sfccc_piece_new (t8_scheme_t * scheme, t8_eclass_t eclass, uint64_t first,
   return piece;
 }
 
-sfccc_element_t * sfccc_piece_get_element (sfccc_piece_t * piece,
-                                           t8_locidx_t elem_index)
+sfccc_element_t    *
+sfccc_piece_get_element (sfccc_piece_t * piece, t8_locidx_t elem_index)
 {
   T8_ASSERT (piece != NULL);
   T8_ASSERT (piece->elements != NULL);
@@ -183,7 +185,8 @@ sfccc_element_t * sfccc_piece_get_element (sfccc_piece_t * piece,
                                                        elem_index);
 }
 
-t8_locidx_t sfccc_piece_num_elements (sfccc_piece_t * piece)
+t8_locidx_t
+sfccc_piece_num_elements (sfccc_piece_t * piece)
 {
   T8_ASSERT (piece != NULL);
   T8_ASSERT (piece->elements != NULL);
@@ -193,7 +196,7 @@ t8_locidx_t sfccc_piece_num_elements (sfccc_piece_t * piece)
 int
 sfccc_element_is_in_piece (sfccc_piece_t * piece, sfccc_element_t * element)
 {
-  uint64_t      element_id;
+  uint64_t            element_id;
 
   T8_ASSERT (piece != NULL && element != NULL);
   /* Compute the linear id of the element */
@@ -207,16 +210,17 @@ sfccc_element_is_in_piece (sfccc_piece_t * piece, sfccc_element_t * element)
 }
 
 void
-sfccc_piece_print (sfccc_piece_t *piece)
+sfccc_piece_print (sfccc_piece_t * piece)
 {
-  t8_locidx_t li;
-  sfccc_element_t *elem;
+  t8_locidx_t         li;
+  sfccc_element_t    *elem;
 
-  t8_debugf ("Piece from %llu to %llu\n", (unsigned long long) piece->first_index,
+  t8_debugf ("Piece from %llu to %llu\n",
+             (unsigned long long) piece->first_index,
              (unsigned long long) piece->last_index);
   t8_debugf ("This piece has %i connected components.\n",
              piece->num_conn_components);
-  for (li = 0;li < sfccc_piece_num_elements (piece);li++) {
+  for (li = 0; li < sfccc_piece_num_elements (piece); li++) {
     elem = sfccc_piece_get_element (piece, li);
     t8_debugf ("Element %li:\n", (long) li);
     t8_debugf ("\trep = %li\n", (long) elem->representant);
