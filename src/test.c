@@ -4,23 +4,21 @@
 #include "sfccc_searchgraph.h"
 
 void
-test_sfccc ()
+test_sfccc (int level, int dim)
 {
   sfccc_piece_t      *piece;
   int                 start, end;
 
-  for (end = 1; end < 16;end++) {
+  T8_ASSERT (dim == 2);
+  T8_ASSERT (level > 0);
+  for (end = 1; end < 1 << (dim * level);end++) {
     for (start = 0; start < end; start++) {
       piece = sfccc_piece_new (t8_scheme_new_default (), T8_ECLASS_TRIANGLE,
-                               start, end, 2);
-      t8_debugf ("Created piece\n");
-      sfccc_piece_print (piece);
+                               start, end, level);
       sfccc_compute_connected_components (piece);
-      t8_debugf ("Done\n");
-      sfccc_piece_print (piece);
       sfccc_piece_destroy (piece);
-      t8_debugf ("Number of conn components:\t%i\n", piece->num_conn_components);
-      t8_debugf ("Destroyed piece\n");
+      t8_debugf ("%i conn components for [%i,%i]\n", piece->num_conn_components,
+                 start, end);
     }
   }
 }
@@ -36,7 +34,7 @@ main (int argc, char *argv[])
   sc_init (sc_MPI_COMM_WORLD, 1, 1, NULL, SC_LP_ESSENTIAL);
   t8_init (SC_LP_DEBUG);
 
-  test_sfccc ();
+  test_sfccc (5, 2);
 
   sc_finalize ();
 
