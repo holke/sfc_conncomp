@@ -23,7 +23,7 @@ sfccc_searchgraph_adapt_representant (sfccc_piece_t * piece,
   /* Change the representant of elem1 */
   elem1->representant = elem2->representant;
   elem1->count_in_cc += elem2->count_in_cc;
-#if 1
+
   for (iface = 0;iface < elem1->num_neighbors;iface++) {
     /* Iterate over all neighbors */
     if (elem1->face_neighbors[iface] >= 0) {
@@ -31,7 +31,6 @@ sfccc_searchgraph_adapt_representant (sfccc_piece_t * piece,
       sfccc_searchgraph_adapt_representant (piece, elem1, temp);
     }
   }
-#endif
 }
 
 /* Perform a depth first search on the connectivity graph
@@ -41,6 +40,8 @@ void sfccc_dfs (sfccc_piece_t * piece, sfccc_element_t * elem)
   sfccc_element_t        *neighbor, *neighbor_from_piece;
   int                     ineigh;
   t8_locidx_t             neighbor_index;
+
+
 
   T8_ASSERT (piece != NULL);
   /* Initiliaze a new element to store the neighbor */
