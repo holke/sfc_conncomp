@@ -7,7 +7,9 @@ typedef struct
 {
   t8_element_t       *t8element;
   int                 num_neighbors;
-  int                *face_neighbors;
+  int                *face_neighbors; /**< Filled with -1 if not investigated, -2 if investigated
+                                           and does not link to an element in the segment,
+                                           the elements index in the segment otherwise. */
   t8_locidx_t         representant;
   t8_locidx_t         count_in_cc;
 } sfccc_element_t;
@@ -40,7 +42,7 @@ t8_locidx_t sfccc_piece_num_elements (sfccc_piece_t * piece);
 
 /** Check whether a given element lies within a SFC piece. If so, the array index
  *  of the element whithin piece is returned.
- *  -1 is returned otherwise.
+ *  -2 is returned otherwise.
  */
 t8_locidx_t         sfccc_element_is_in_piece (sfccc_piece_t * piece,
                                                sfccc_element_t * element);
@@ -52,6 +54,9 @@ sfccc_element_t * sfccc_piece_get_element (sfccc_piece_t * piece,
 /** Fills a specific neighbor entry of an element. Fills both sides */
 void              sfccc_piece_element_fill_neighbor (sfccc_piece_t * piece, sfccc_element_t * elem,
                                                     int face);
+
+/** Add an element to the end of a SFC piece, thus the piece is enlarged by one */
+void              sfccc_piece_grow1 (sfccc_piece_t * piece);
 
 /** Print basic information about a piece structure */
 void                sfccc_piece_print (sfccc_piece_t *piece);

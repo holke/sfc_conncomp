@@ -8,15 +8,27 @@ sfccc_piece_element_fill_neighbor (sfccc_piece_t * piece,
   int                 neigh_face;
   t8_locidx_t         neighbor_index;
 
+#if 0
+  t8_debugf ("Neighbors of %llu across %i\n",
+             (long long unsigned)
+             t8_element_get_linear_id (piece->escheme, elem->t8element,
+                                       piece->level),
+             face);
+#endif
   neighbor = sfccc_piece_new_element (piece);
   /* Compute the face neighbor across the given face */
   neigh_face = t8_element_face_neighbor (piece->escheme, elem->t8element,
                                          neighbor->t8element, face);
-  neighbor_index = -1;
+  /* Fill in -2 to indicate that we investigated this connection */
+  neighbor_index = -2;
   if (t8_element_is_inside_root (piece->escheme, neighbor->t8element)) {
     /* We only need to continue if the new neighbor is inside the
      * root tree. We now check if it is a part of the SFC piece. */
     neighbor_index = sfccc_element_is_in_piece (piece, neighbor);
+    t8_debugf("\tis inside %i\n", neighbor_index);
+  }
+  else {
+    t8_debugf("\tis not inside\n");
   }
   /* Set the neighbor entry either to the index of the face neighbor
    * or to a negative value. */
@@ -31,6 +43,7 @@ sfccc_piece_element_fill_neighbor (sfccc_piece_t * piece,
   }
 }
 
+#if 0
 static void
 sfccc_piece_element_fill_neighbors (sfccc_piece_t * piece)
 {
@@ -62,6 +75,7 @@ sfccc_piece_element_fill_neighbors (sfccc_piece_t * piece)
   }
   sfccc_piece_element_destroy (piece, neighbor);
 }
+#endif
 
 static void
 sfccc_piece_init_element (sfccc_piece_t * piece, sfccc_element_t * element,
@@ -79,8 +93,8 @@ sfccc_piece_init_element (sfccc_piece_t * piece, sfccc_element_t * element,
     element->face_neighbors[iface] = -1;
   }
 
-  /* At the beginning each element is its own representant */
-  element->representant = index;
+  /* At the beginning each element has an invalid representant */
+  element->representant = -1;
   element->count_in_cc = 1;
 }
 
@@ -165,6 +179,7 @@ sfccc_piece_new (t8_scheme_t * scheme, t8_eclass_t eclass, uint64_t first,
   piece->level = level;
   piece->eclass = eclass;
   piece->scheme = scheme;
+  t8_scheme_ref (scheme);
   piece->escheme = scheme->eclass_schemes[eclass];
   piece->num_conn_components = last - first + 1;
   /* Fill the array of elements */
@@ -206,7 +221,30 @@ sfccc_element_is_in_piece (sfccc_piece_t * piece, sfccc_element_t * element)
   if (piece->first_index <= element_id && element_id <= piece->last_index) {
     return element_id - piece->first_index;
   }
-  return -1;
+  return -2;
+}
+
+void
+sfccc_piece_grow1 (sfccc_piece_t * piece)
+{
+  sfccc_element_t * new_elem;
+
+  T8_ASSERT (piece != NULL);
+  T8_ASSERT (piece->last_index <
+             t8_eclass_count_leaf (piece->eclass, piece->level));
+
+  /* The last index  grows by one */
+  piece->last_index++;
+  /* The added element possiblt adds a new connected component */
+  piece->num_conn_components++;
+  new_elem = (sfccc_element_t *) sc_array_push (piece->elements);
+  /* Initialize the new element */
+  sfccc_piece_init_element (piece, new_elem, piece->last_index
+                            - piece->first_index);
+  /* Construct new t8 element */
+  t8_element_new (piece->escheme, 1, &new_elem->t8element);
+  t8_element_set_linear_id (piece->escheme, new_elem->t8element,
+                            piece->level, piece->last_index);
 }
 
 void

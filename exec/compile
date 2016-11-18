@@ -9,7 +9,7 @@ T8_DIR=$BASEDIR/t8code_install
 
 CC=mpicc
 CFLAGS='-Wall -pedantic --std=c99 -O0 -g'
-SOURCE='../src/test.c ../src/sfccc_piece.c ../src/sfccc_searchgraph.c'
+SOURCE='../src/compute_cc.c ../src/sfccc_piece.c ../src/sfccc_searchgraph.c'
 
 # There should be no need to change the following lines
 LIB=$T8_DIR/lib
@@ -23,5 +23,5 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LIB
 echo libraries in $LIB
 echo header in $INCLUDE
 
-echo "$CC $CFLAGS -o test $SOURCE -I$INCLUDE -L$LIB $LIBS"
-$CC $CFLAGS -o test $SOURCE -I$INCLUDE -L$LIB $LIBS
+echo "$CC $CFLAGS -o compute_cc $SOURCE -I$INCLUDE -L$LIB $LIBS"
+$CC $CFLAGS -o compute_cc $SOURCE -I$INCLUDE -L$LIB $LIBS
