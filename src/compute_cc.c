@@ -100,7 +100,9 @@ compute_all_simplex_cc (int level, int dim, sc_MPI_Comm comm)
     printf ("For %s, level %i\n", t8_eclass_to_string[eclass], level);
     printf ("Num cc.\tcount\tAvg. length\n");
     for (start = 0; start < 2 * level; start++) {
-      len_per_count_all[start] /= num_cc_counts_all[start];
+      if (num_cc_counts_all[start] != 0) {
+        len_per_count_all[start] /= num_cc_counts_all[start];
+      }
       printf ("%i\t%i", start + 1, num_cc_counts_all[start]);
       printf ("\t%i\n", len_per_count_all[start]);
     }
