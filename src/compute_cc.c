@@ -10,8 +10,8 @@ compute_all_simplex_cc (int level, int dim, sc_MPI_Comm comm)
 {
   sfccc_piece_t      *piece;
   t8_locidx_t         start, len, proc_start;
-  int                *num_cc_counts, *len_per_count, *num_cc_counts_all;
-  int                *len_per_count_all;
+  int                *num_cc_counts, *num_cc_counts_all;
+  double             *len_per_count, *len_per_count_all;
   t8_eclass_t         eclass;
   t8_locidx_t         last_element;
   t8_scheme_t        *scheme;
@@ -43,8 +43,7 @@ compute_all_simplex_cc (int level, int dim, sc_MPI_Comm comm)
   /* We allocate one less than the possible maximum number of cc, since we
    * do not need a place in the array for zero connected components. */
   num_cc_counts = T8_ALLOC_ZERO (int, 2 * (level));
-  len_per_count = T8_ALLOC_ZERO (int, 2 * (level));
-
+  len_per_count = T8_ALLOC_ZERO (double, 2 * (level));
 
   scheme = t8_scheme_new_default ();
   last_element = t8_eclass_count_leaf (eclass, level);
@@ -85,12 +84,12 @@ compute_all_simplex_cc (int level, int dim, sc_MPI_Comm comm)
      * the local counts to process 0 */
     if (mpirank == 0) {
       num_cc_counts_all = T8_ALLOC (int, 2 * level);
-      len_per_count_all = T8_ALLOC (int, 2 * level);
+      len_per_count_all = T8_ALLOC (double, 2 * level);
     }
     mpiret = sc_MPI_Reduce (num_cc_counts, num_cc_counts_all, 2*level,
                             sc_MPI_INT, sc_MPI_SUM, 0, comm);
     mpiret = sc_MPI_Reduce (len_per_count, len_per_count_all, 2*level,
-                            sc_MPI_INT, sc_MPI_SUM, 0, comm);
+                            sc_MPI_DOUBLE, sc_MPI_SUM, 0, comm);
   }
   else {
     num_cc_counts_all = num_cc_counts;
@@ -104,7 +103,7 @@ compute_all_simplex_cc (int level, int dim, sc_MPI_Comm comm)
         len_per_count_all[start] /= num_cc_counts_all[start];
       }
       printf ("%i\t%i", start + 1, num_cc_counts_all[start]);
-      printf ("\t%i\n", len_per_count_all[start]);
+      printf ("\t%f\n", len_per_count_all[start]);
     }
   }
   t8_scheme_unref (&scheme);
