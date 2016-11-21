@@ -1,0 +1,26 @@
+#!/bin/bash
+
+type="Triangle"
+for dim in 2 3
+do
+  for lvl in `seq 1 4`
+  do
+    
+    gnuplot <<- EOF
+    set term png
+    set out "conn_comp_plot_l${lvl}_d${dim}.png"
+    set logscale y
+    set xtics 1
+    set y2tics
+    set ylabel 'Number of connected components [%]' tc lt 1
+    set y2label 'Average length' tc lt 2
+    set xlabel 'Number of SFC segments'
+    set title "$type, level $lvl"
+    
+    plot "./compute_cc_l${lvl}_d${dim}.dat" using 1:(100*\$4) w lp t "Number of conn. comp." lt 1,\
+           '' using 1:3 w lp t "avg. length" axes x1y2 lt 2
+EOF
+  done
+  # After the first iteration we switch to tets
+  type="Tet"
+done

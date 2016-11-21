@@ -1,0 +1,11 @@
+In this folder we collect results for the number of space-filling
+curve components.
+These results were obtain on the local computing cluster of the
+Institute for Numerical Simulation of the University of Bonn.
+
+By calling the script
+
+grep_results.scp
+
+a .dat file for each run is created from the output file 
+compute_cc.o184315

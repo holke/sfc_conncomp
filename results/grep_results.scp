@@ -1,0 +1,24 @@
+#!/bin/bash
+
+maxlvl=5
+file=./compute_cc.o184315
+tmpfile=.tmpfile
+
+for dim in 2 3
+do
+  for lvl in `seq 1 $maxlvl`
+  do
+    outfile=compute_cc_l${lvl}_d${dim}.dat
+    # At first we filter the 2*lvl+4 lines of the corect run
+    first_parse=`grep -e "\-l$lvl \-d$dim" -A$((2*lvl+4)) $file`
+    # We then grep this output for the lines beginning with a number
+    echo "# Level $lvl, dim $dim number of connected components" > $outfile
+    echo "# num_cc count Avg.len count.perc. TotalCount" >> $outfile
+    grep -e "^[1-9]"  <<< "$first_parse" >> $outfile
+    # Compute the total number of segments
+    total=`awk '{x+=$2} END{print x}' $outfile`
+    # Add the total number in the last column, the percentage in the second last
+    awk -v total_="$total" '/^[0-9]/ {if ($2!=0) print $0 " "$2/total_" "total_} !/^[0-9]/ {print $0}' $outfile > $tmpfile
+    mv $tmpfile $outfile
+  done
+done

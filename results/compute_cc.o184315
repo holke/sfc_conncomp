@@ -1,0 +1,101 @@
+Ubuntu Version: precise 12.04
+Running on 512 processors ... 
+/home/holke/sfc_conncomp/exec/compute_cc
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l1 -d2
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Triangle, level 1
+Num cc.	count	Avg. length
+1	5	2.800000
+2	1	2.000000
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l1 -d3
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Tet, level 1
+Num cc.	count	Avg. length
+1	21	4.333333
+2	7	3.000000
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l2 -d2
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Triangle, level 2
+Num cc.	count	Avg. length
+1	83	7.662651
+2	33	4.424242
+3	4	4.500000
+4	0	0.000000
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l2 -d3
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Tet, level 2
+Num cc.	count	Avg. length
+1	1284	27.663551
+2	497	14.050302
+3	214	14.046729
+4	21	8.904762
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l3 -d2
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Triangle, level 3
+Num cc.	count	Avg. length
+1	1314	27.500761
+2	591	13.996616
+3	94	11.191489
+4	17	13.882353
+5	0	0.000000
+6	0	0.000000
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l3 -d3
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Tet, level 3
+Num cc.	count	Avg. length
+1	80522	216.586051
+2	30057	104.462122
+3	14940	97.644846
+4	4444	92.337084
+5	730	60.445205
+6	123	59.406504
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l4 -d2
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Triangle, level 4
+Num cc.	count	Avg. length
+1	20916	107.251865
+2	9673	52.169131
+3	1522	38.688568
+4	454	40.466960
+5	74	48.918919
+6	1	12.000000
+7	0	0.000000
+8	0	0.000000
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l4 -d3
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Tet, level 4
+Num cc.	count	Avg. length
+1	5126627	1730.671693
+2	1870468	830.332109
+3	922018	774.724856
+4	334948	723.230161
+5	104303	639.531327
+6	22604	451.188329
+7	4938	456.009113
+8	654	464.681957
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l5 -d2
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Triangle, level 5
+Num cc.	count	Avg. length
+1	334120	426.518760
+2	155397	204.905526
+3	23748	150.836618
+4	7963	143.707146
+5	2200	156.690909
+6	335	175.211940
+7	12	46.333333
+8	1	44.000000
+9	0	0.000000
+10	0	0.000000
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l5 -d3
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
