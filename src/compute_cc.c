@@ -27,7 +27,7 @@
 #include "sfccc_searchgraph.h"
 
 void
-compute_all_simplex_cc (int level, int dim, sc_MPI_Comm comm)
+compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
 {
   sfccc_piece_t      *piece;
   t8_locidx_t         start, len, proc_start;
@@ -50,10 +50,20 @@ compute_all_simplex_cc (int level, int dim, sc_MPI_Comm comm)
   proc_start = mpirank;
 
   if (dim == 2) {
-    eclass = T8_ECLASS_TRIANGLE;
+    if (do_cubical) {
+      eclass = T8_ECLASS_QUAD;
+    }
+    else {
+      eclass = T8_ECLASS_TRIANGLE;
+    }
   }
   else if (dim == 3) {
-    eclass = T8_ECLASS_TET;
+    if (do_cubical) {
+      eclass = T8_ECLASS_HEX;
+    }
+    else {
+      eclass = T8_ECLASS_TET;
+    }
   }
   else {
     SC_ABORT ("Wrong usage.\n");
@@ -140,6 +150,7 @@ int
 main (int argc, char *argv[])
 {
   int                 mpiret, level, dim;
+  int                 cube;
   int                 parsed;
   sc_options_t       *opt;
 
@@ -154,6 +165,8 @@ main (int argc, char *argv[])
 
   sc_options_add_int (opt, 'd', "dim", &dim, 2, "The dimension.");
   sc_options_add_int (opt, 'l', "level", &level, 0, "The refinement level.");
+  sc_options_add_switch (opt, 'c', "cubical", &cube,
+                         "Switch to cubical Morton.");
 
   parsed =
     sc_options_parse (t8_get_package_id (), SC_LP_ERROR, opt, argc, argv);
@@ -164,7 +177,7 @@ main (int argc, char *argv[])
   }
   else {
     /* Run the program */
-    compute_all_simplex_cc (level, dim, sc_MPI_COMM_WORLD);
+    compute_all_simplex_cc (level, dim, cube, sc_MPI_COMM_WORLD);
   }
 
   sc_options_destroy (opt);
