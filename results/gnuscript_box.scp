@@ -15,14 +15,15 @@ do
     set style fill solid border -1
     set logscale y
     set xtics 1
+    set grid ytics
     set yrange [:130]
     set y2tics
-    set ylabel 'Number of connected components [%]' tc lt 1
+    set ylabel 'Relative number of SFC segments [%]' tc lt 1
     set y2label 'Average length' tc lt 2
-    set xlabel 'Number of SFC segments'
+    set xlabel 'Number of connected components'
     set title "$type, level $lvl"
     
-    plot "./compute_cc_l${lvl}_d${dim}.dat" using (100*\$4):xtic(1) t "Number of conn. comp." lt 1,\
+    plot "./compute_cc_l${lvl}_d${dim}.dat" using (100*\$4):xtic(1) t "Relative number of segments" lt 1,\
       '' using 3 t "avg. length" axes x1y2#,\
 #      '' u 0:(140*\$4):4   w labels notitle
 EOF

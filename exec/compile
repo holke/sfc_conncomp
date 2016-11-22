@@ -8,7 +8,7 @@ T8_DIR=$BASEDIR/t8code_install
 # Compiler settings
 
 CC=mpicc
-CFLAGS='-Wall -pedantic --std=c99 -O0 -g'
+CFLAGS='-Wall -pedantic --std=c99 -O2'
 SOURCE='../src/compute_cc.c ../src/sfccc_piece.c ../src/sfccc_searchgraph.c'
 
 # There should be no need to change the following lines

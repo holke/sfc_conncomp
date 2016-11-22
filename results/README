@@ -9,3 +9,12 @@ grep_results.scp
 
 a .dat file for each run is created from the output file 
 compute_cc.o184315
+
+If we the call either
+./gnuscript.scp
+
+of
+
+./gnuscript_box.scp
+
+a plot (histogram plot) for each configuration is generated.
