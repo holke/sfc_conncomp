@@ -1,0 +1,38 @@
+This project implements the program
+compute_cc
+which calculates the number of connected components of the 
+tetrahedral Morton curve for a given refinement level in 2D or 3D.
+
+INSTALLATION
+
+This program depends on the t8code library (sec_tet branch).
+
+Install t8code as an external library in a folder.
+
+Edit the entries BASE_DIR and T8_DIR in the file ./exec/compile.
+
+$ cd ./exec
+$ source compile
+
+The source call is necessary to export the correct t8code library.
+In subsequent calls, only ./compile is necessary.
+
+
+USAGE
+
+The program exec/compute_cc accepts two options:
+ -d [num]       num is either 2 or 3 and specifies the dimension (triangle or tetrahedra)
+ -l [num]       num is a non-negative integer and specifies the uniform refinement level
+
+The program is parallelized with MPI. To run a parallel version with p processes, call
+
+$ mpirun -np p ./compute_cc -d [num] -l [num]
+
+
+
+
+
+TODO
+
+Configure the project with autotool or cmake to automate the installation process.
+Include options for the original Morton curve (quads and hexes).
