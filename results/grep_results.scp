@@ -1,10 +1,10 @@
 #!/bin/bash
 
-maxlvl=5
+maxlvl=6
 file=./compute_cc.o184315
 tmpfile=.tmpfile
 
-for dim in 2 3
+for dim in 3 2
 do
   for lvl in `seq 1 $maxlvl`
   do
@@ -21,4 +21,5 @@ do
     awk -v total_="$total" '/^[0-9]/ {if ($2!=0) print $0 " "$2/total_" "total_} !/^[0-9]/ {print $0}' $outfile > $tmpfile
     mv $tmpfile $outfile
   done
+  maxlvl=8
 done

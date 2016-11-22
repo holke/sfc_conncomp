@@ -1,9 +1,10 @@
 #!/bin/bash
 
-type="Triangle"
-for dim in 2 3
+mxlvl=5
+type="Tetrahedron"
+for dim in 3 2
 do
-  for lvl in `seq 1 4`
+  for lvl in `seq 1 $maxlvl`
   do
     
     gnuplot <<- EOF
@@ -22,5 +23,6 @@ do
 EOF
   done
   # After the first iteration we switch to tets
-  type="Tet"
+  type="Triangle"
+  maxlvl=8
 done

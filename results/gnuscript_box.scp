@@ -1,9 +1,10 @@
 #!/bin/bash
 
-type="Triangle"
-for dim in 2 3
+type="Tetrahedron"
+maxlvl=6
+for dim in 3 2
 do
-  for lvl in `seq 1 4`
+  for lvl in `seq 1 $maxlvl`
   do
     
     gnuplot <<- EOF
@@ -22,10 +23,11 @@ do
     set title "$type, level $lvl"
     
     plot "./compute_cc_l${lvl}_d${dim}.dat" using (100*\$4):xtic(1) t "Number of conn. comp." lt 1,\
-      '' using 3 t "avg. length" axes x1y2,\
-      '' u 0:(130*\$4):4 w labels notitle
+      '' using 3 t "avg. length" axes x1y2#,\
+#      '' u 0:(140*\$4):4   w labels notitle
 EOF
   done
   # After the first iteration we switch to tets
-  type="Tet"
+  type="Triangle"
+  maxlvl=8
 done

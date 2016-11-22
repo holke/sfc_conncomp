@@ -99,3 +99,78 @@ Num cc.	count	Avg. length
 mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l5 -d3
 [libsc] This is libsc 1.1.226-6345
 [t8] This is t8 UNKNOWN-dirty
+For Tet, level 5
+Num cc.	count	Avg. length
+1	327640929	13848.310795
+2	118509563	6639.985889
+3	57636786	6211.132604
+4	21463251	5800.555617
+5	8176267	5287.109570
+6	2588168	4538.675135
+7	646338	3516.484109
+8	159485	3533.189341
+9	30297	3642.704162
+10	3444	3704.406504
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l6 -d2
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Triangle, level 6
+Num cc.	count	Avg. length
+1	5343568	1703.733571
+2	2487709	816.062010
+3	373502	603.834121
+4	127552	555.874592
+5	41850	563.159761
+6	10682	607.466392
+7	1578	618.613435
+8	104	180.730769
+9	14	178.571429
+10	1	172.000000
+11	0	0.000000
+12	0	0.000000
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l6 -d3
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l7 -d2
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Triangle, level 7
+Num cc.	count	Avg. length
+1	85487264	6812.670302
+2	39803725	3261.007589
+3	5928536	2422.646906
+4	2014697	2213.452439
+5	696280	2155.655529
+6	218302	2215.877637
+7	52056	2325.896727
+8	7750	2138.640516
+9	776	709.948454
+10	133	712.421053
+11	16	705.750000
+12	1	684.000000
+13	0	0.000000
+14	0	0.000000
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l8 -d2
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
+For Triangle, level 8
+Num cc.	count	Avg. length
+1	1367756096	27248.456905
+2	636840109	13041.171054
+3	94558258	9707.035527
+4	31937414	8870.441831
+5	11140994	8507.861493
+6	3787799	8438.844244
+7	1128524	8667.443131
+8	255540	8772.907287
+9	39564	7279.850167
+10	5339	2794.599738
+11	1058	2826.499055
+12	166	2836.072289
+13	18	2808.222222
+14	1	2732.000000
+15	0	0.000000
+16	0	0.000000
+mpirun -np 512 /home/holke/sfc_conncomp/exec/compute_cc -l9 -d2
+[libsc] This is libsc 1.1.226-6345
+[t8] This is t8 UNKNOWN-dirty
