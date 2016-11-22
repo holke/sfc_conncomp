@@ -10,10 +10,10 @@ grep_results.scp
 a .dat file for each run is created from the output file 
 compute_cc.o184315
 
-If we the call either
+If we then call either
 ./gnuscript.scp
 
-of
+or
 
 ./gnuscript_box.scp
 

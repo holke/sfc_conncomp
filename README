@@ -34,5 +34,5 @@ $ mpirun -np p ./compute_cc -d [num] -l [num]
 
 TODO
 
-Configure the project with autotool or cmake to automate the installation process.
+Configure the project with autotools or cmake to automate the installation process.
 Include options for the original Morton curve (quads and hexes).
