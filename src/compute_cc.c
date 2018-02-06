@@ -31,8 +31,11 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
 {
   sfccc_piece_t      *piece;
   t8_locidx_t         start, len, proc_start;
-  int                *num_cc_counts, *num_cc_counts_all;
-  double             *len_per_count, *len_per_count_all;
+  int                *num_cc_counts, *num_cc_counts_all = NULL;
+  int               (*num_cc_counts_binned)[32];
+  int               (*num_cc_counts_binned_all)[32] = NULL;
+  int                 bin_sizes[32] = {0}, bin_sizes_all[32] = {0};
+  double             *len_per_count, *len_per_count_all = NULL;
   t8_eclass_t         eclass;
   t8_locidx_t         last_element;
   t8_scheme_t        *scheme;
@@ -75,6 +78,8 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
    * do not need a place in the array for zero connected components. */
   num_cc_counts = T8_ALLOC_ZERO (int, 2 * (level));
   len_per_count = T8_ALLOC_ZERO (double, 2 * (level));
+  num_cc_counts_binned = (int (*)[32]) calloc (2 * level, 32 * sizeof(int));
+  num_cc_counts_binned_all = (int (*)[32]) calloc (2 * level, 32 * sizeof(int));
 
   scheme = t8_scheme_new_default ();
   last_element = t8_eclass_count_leaf (eclass, level);
@@ -97,6 +102,8 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
       if (0 < piece->num_conn_components
           && piece->num_conn_components < 2 * level + 1) {
         num_cc_counts[piece->num_conn_components - 1]++;
+        num_cc_counts_binned[piece->num_conn_components - 1][SC_LOG2_32(len)]++;
+        bin_sizes[SC_LOG2_32(len)]++;
         len_per_count[piece->num_conn_components - 1] += len;
       }
       else {
@@ -121,12 +128,17 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
                             sc_MPI_INT, sc_MPI_SUM, 0, comm);
     mpiret = sc_MPI_Reduce (len_per_count, len_per_count_all, 2*level,
                             sc_MPI_DOUBLE, sc_MPI_SUM, 0, comm);
+    mpiret = sc_MPI_Reduce (num_cc_counts_binned, num_cc_counts_binned_all, 32 * 2*level,
+                            sc_MPI_INT, sc_MPI_SUM, 0, comm);
+    mpiret = sc_MPI_Reduce (bin_sizes, bin_sizes_all, 32, sc_MPI_INT, sc_MPI_SUM, 0, comm);
+    SC_CHECK_MPI (mpiret);
   }
   else {
     num_cc_counts_all = num_cc_counts;
     len_per_count_all = len_per_count;
   }
   if (mpirank == 0) {
+    int bin;
     printf ("For %s, level %i\n", t8_eclass_to_string[eclass], level);
     printf ("Num cc.\tcount\tAvg. length\n");
     for (start = 0; start < 2 * level; start++) {
@@ -136,8 +148,32 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
       printf ("%i\t%i", start + 1, num_cc_counts_all[start]);
       printf ("\t%f\n", len_per_count_all[start]);
     }
+    printf ("\nBinned counts:\n2^ ");
+    for (bin = 0; bin < 32; bin++) {
+      if (!bin_sizes_all[bin]) continue;
+      printf("  [%2d,%2d)",bin,bin+1);
+    }
+    printf("\n");
+    for (start = 0; start < 2 * level; start++) {
+      if (num_cc_counts_all[start] != 0) {
+        len_per_count_all[start] /= num_cc_counts_all[start];
+      }
+      printf ("%2d:", start + 1);
+      for (bin = 0; bin < 32; bin++) {
+        if (!bin_sizes_all[bin]) continue;
+        printf(" %8d",num_cc_counts_binned_all[start][bin]);
+      }
+      printf("\n   ");
+      for (bin = 0; bin < 32; bin++) {
+        if (!bin_sizes_all[bin]) continue;
+        printf(" %4.2e",bin_sizes_all[bin] ? ((double) num_cc_counts_binned_all[start][bin] / (double) bin_sizes_all[bin]) : 0);
+      }
+      printf("\n\n");
+    }
   }
   t8_scheme_unref (&scheme);
+  free (num_cc_counts_binned);
+  free (num_cc_counts_binned_all);
   T8_FREE (num_cc_counts);
   T8_FREE (len_per_count);
   if (mpisize > 1 && mpirank == 0) {
