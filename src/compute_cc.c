@@ -84,7 +84,7 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
   scheme = t8_scheme_new_default ();
   last_element = t8_eclass_count_leaf (eclass, level);
 #if 1
-  for (start = proc_start; start < last_element - 1; start += mpisize) {
+  for (start = proc_start; start < last_element; start += mpisize) {
     if (start % 1000) {
       t8_debugf ("Starting run %li/%li\n", (long) start,
                  (long) last_element - 1);
@@ -93,12 +93,11 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
     piece = sfccc_piece_new (scheme, eclass,
                              start, len, level);
     sfccc_compute_connected_components (piece);
-    for (len = 2; len < last_element - start + 1; len++) {
+    for (len = 1; len < last_element - start + 1; len++) {
 #endif
-      sfccc_piece_grow1 (piece);
       sfccc_compute_connected_components_fromlast (piece);
-      t8_global_productionf ("%i conn components for [%i,%i]\n",
-                 piece->num_conn_components, start, len);
+      t8_global_productionf ("%i conn components for [%li,%li]\n",
+                 piece->num_conn_components, piece->first_index, piece->last_index);
       if (0 < piece->num_conn_components
           && piece->num_conn_components < 2 * level + 1) {
         num_cc_counts[piece->num_conn_components - 1]++;
@@ -111,6 +110,7 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
           ("Strange number of conn. components measured: %i for segment"
            " [%i,%i]\n", piece->num_conn_components, start, len);
       }
+      sfccc_piece_grow1 (piece);
 #if 1
     }
     sfccc_piece_destroy (piece);
