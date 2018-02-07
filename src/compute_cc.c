@@ -109,7 +109,9 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
           ("Strange number of conn. components measured: %i for segment"
            " [%i,%i]\n", piece->num_conn_components, start, len);
       }
-      sfccc_piece_grow1 (piece);
+      if (len < last_element - start) {
+        sfccc_piece_grow1 (piece);
+      }
 #if 1
     }
     sfccc_piece_destroy (piece);
