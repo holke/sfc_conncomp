@@ -5,7 +5,7 @@ tetrahedral or cubical Morton curve for a given refinement level in 2D or 3D.
 
 INSTALLATION
 
-This program depends on the t8code library (develop branch).
+This program depends on the t8code library commit b3a1368358105f9bb81ceb6319a7105e873cdce8.
 t8code can be found at https://github.com/holke/t8code.
 
 Install t8code as an external library in a folder.
