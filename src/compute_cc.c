@@ -79,7 +79,6 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
   num_cc_counts = T8_ALLOC_ZERO (int, 2 * (level));
   len_per_count = T8_ALLOC_ZERO (double, 2 * (level));
   num_cc_counts_binned = (int (*)[32]) calloc (2 * level, 32 * sizeof(int));
-  num_cc_counts_binned_all = (int (*)[32]) calloc (2 * level, 32 * sizeof(int));
 
   scheme = t8_scheme_new_default ();
   last_element = t8_eclass_count_leaf (eclass, level);
@@ -123,6 +122,7 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
     if (mpirank == 0) {
       num_cc_counts_all = T8_ALLOC (int, 2 * level);
       len_per_count_all = T8_ALLOC (double, 2 * level);
+      num_cc_counts_binned_all = (int (*)[32]) calloc (2 * level, 32 * sizeof(int));
     }
     mpiret = sc_MPI_Reduce (num_cc_counts, num_cc_counts_all, 2*level,
                             sc_MPI_INT, sc_MPI_SUM, 0, comm);
@@ -136,6 +136,8 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
   else {
     num_cc_counts_all = num_cc_counts;
     len_per_count_all = len_per_count;
+    num_cc_counts_binned_all = num_cc_counts_binned;
+    memcpy (bin_sizes_all, bin_sizes, sizeof(int) * 32);
   }
   if (mpirank == 0) {
     int bin;
@@ -173,11 +175,11 @@ compute_all_simplex_cc (int level, int dim, int do_cubical, sc_MPI_Comm comm)
   }
   t8_scheme_unref (&scheme);
   free (num_cc_counts_binned);
-  free (num_cc_counts_binned_all);
   T8_FREE (num_cc_counts);
   T8_FREE (len_per_count);
   if (mpisize > 1 && mpirank == 0) {
     T8_FREE (num_cc_counts_all);
+    free (num_cc_counts_binned_all);
     T8_FREE (len_per_count_all);
   }
 }
