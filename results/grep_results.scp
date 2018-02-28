@@ -1,7 +1,13 @@
 #!/bin/bash
 
+if [ $# -ne 1 ]
+then
+ echo usage: $0 IN_FILE
+ exit 0
+fi
+
 maxlvl=6
-file=./compute_cc.o184315
+file=$1
 tmpfile=.tmpfile
 
 for dim in 3 2
@@ -20,6 +26,7 @@ do
     # Add the total number in the last column, the percentage in the second last
     awk -v total_="$total" '/^[0-9]/ {if ($2!=0) print $0 " "$2/total_" "total_} !/^[0-9]/ {print $0}' $outfile > $tmpfile
     mv $tmpfile $outfile
+    echo created file $outfile
   done
   maxlvl=8
 done
