@@ -22,13 +22,13 @@ do
     set grid ytics
     set yrange [:130]
     set y2tics
-    set ylabel 'Relative number of SFC segments [%]' tc rgb "$ColorLeft" 
-    set y2label 'Average length' tc rgb "$ColorRight"
+    set ylabel 'Relative number of SFC segments [%]' #tc rgb "$ColorLeft" 
+    set y2label 'Average length' #tc rgb "$ColorRight"
     set xlabel 'Number of connected components'
     set title "$type, level $lvl"
     
     # remove 'lc rgbcolor "black" fs pattern {1,2}' for colored ouput
-    plot "./compute_cc_l${lvl}_d${dim}.dat" using (100*\$4):xtic(1) t "Relative number of segments" lt 1 lc rgbcolor "$ColorLeft" fs pattern 6,\
+    plot "./compute_cc_l${lvl}_d${dim}.dat" using (100*\$4):xtic(1) t "Relative number of segments" lt 1 lc rgbcolor "$ColorLeft" fs pattern 2,\
       '' using 3 t "avg. length" axes x1y2 lc rgbcolor "$ColorRight" fs pattern 7
 EOF
   done 
