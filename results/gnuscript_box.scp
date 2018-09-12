@@ -2,14 +2,15 @@
 
 type="Tetrahedron"
 maxlvl=6
+ColorLeft="#d95f02" # Color of the left Bar and text
+ColorRight="#7570b3" # Color of the right Bar and text
 for dim in 3 2
 do
   for lvl in `seq 1 $maxlvl`
   do
-    
     gnuplot <<- EOF
-    set term png
-    set out "conn_comp_plot_l${lvl}_d${dim}_box.png"
+    set term svg
+    set out "conn_comp_plot_l${lvl}_d${dim}_box.svg"
     set style data histogram
     set style histogram cluster gap 1
 # Use this line for colored picture:
@@ -21,14 +22,14 @@ do
     set grid ytics
     set yrange [:130]
     set y2tics
-    set ylabel 'Relative number of SFC segments [%]' tc lt 1
-    set y2label 'Average length' tc lt 2
+    set ylabel 'Relative number of SFC segments [%]' tc rgb "$ColorLeft" 
+    set y2label 'Average length' tc rgb "$ColorRight"
     set xlabel 'Number of connected components'
     set title "$type, level $lvl"
     
     # remove 'lc rgbcolor "black" fs pattern {1,2}' for colored ouput
-    plot "./compute_cc_l${lvl}_d${dim}.dat" using (100*\$4):xtic(1) t "Relative number of segments" lt 1 lc rgbcolor "red" fs pattern 6,\
-      '' using 3 t "avg. length" axes x1y2 lc rgbcolor "green" fs pattern 7
+    plot "./compute_cc_l${lvl}_d${dim}.dat" using (100*\$4):xtic(1) t "Relative number of segments" lt 1 lc rgbcolor "$ColorLeft" fs pattern 6,\
+      '' using 3 t "avg. length" axes x1y2 lc rgbcolor "$ColorRight" fs pattern 7
 EOF
   done 
   # After the first iteration we switch to triangles
